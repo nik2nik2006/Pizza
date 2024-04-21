@@ -6,7 +6,7 @@ import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizzaBlock from "../components/PizzaBlock";
 
 
-const Home = () => {
+const Home = ({searchValue}) => {
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [categoryId, setCategoryId] = React.useState(0);
@@ -16,13 +16,14 @@ const Home = () => {
     });
     const [orderBy, setOrderBy] = React.useState('asc');
 
-    console.log(categoryId, sortType.sortProperty)
-
     React.useEffect(() => {
         setIsLoading(true);
+        const category = categoryId > 0 ? `category=${categoryId}` : '';
+        const search = searchValue ? `&search=${searchValue}` : '';
+        console.log(search, 'SEARCH')
         fetch(`https://6603e6a62393662c31d00976.mockapi.io/items?${
-            categoryId > 0 ? `category=${categoryId}` : '' 
-            }&sortBy=${sortType.sortProperty}&order=${orderBy}`,
+            category}${
+            search}&sortBy=${sortType.sortProperty}&order=${orderBy}`,
         )
             .then((res) => res.json())
             .then((arr) => {
@@ -30,7 +31,17 @@ const Home = () => {
                 setIsLoading(false);
             });
         window.scrollTo(0, 0);
-    }, [categoryId, sortType, orderBy]);
+    }, [categoryId, sortType, orderBy, searchValue]);
+
+    // фильтрация пицц без запроса на бекэнд
+    // const pizzas = items.filter((obj) => {
+    //     if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+    //         return true;
+    //     }
+    //     return false;
+    // }).map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+    const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+    const skeletons = [...new Array(9)].map((_, index) => <Skeleton key={index}/>);
 
     return (
         <div className="container">
@@ -43,14 +54,15 @@ const Home = () => {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-                {
-                    isLoading
-                        ? [...new Array(9)].map((_, index) => <Skeleton key={index}/>)
-                        : items.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
-                }
+                { isLoading ? skeletons : pizzas }
             </div>
         </div>
     )
 }
 
 export default Home;
+
+
+
+
+
