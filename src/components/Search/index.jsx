@@ -1,16 +1,38 @@
 import React from "react";
-import {SearchContext} from "../../App";
+import debounce from 'lodash.debounce';
+import { SearchContext } from "../../App";
 
 import styles from './Search.module.scss'
 
 const Search = () => {
-    const {searchValue, setSearchValue} = React.useContext(SearchContext);
+    const [value, setValue] = React.useState('');
+    const { setSearchValue } = React.useContext(SearchContext);
+    const inputRef = React.useRef();
+
+    const onClickClear = () => {
+        setSearchValue('');
+        setValue('');
+        inputRef.current.focus();
+    };
+
+    const updateSearchValue = React.useCallback(
+        debounce((str) => {
+            setSearchValue(str);
+        }, 1000),
+        []
+    );
+
+    const onChangeInput = (event) => {
+        setValue(event.target.value);
+        updateSearchValue(event.target.value)
+    }
+
     return (
         <div className={styles.root}>
             <svg className={styles.icon} version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  x="0px" y="0px"
                  width="612.08px" height="612.08px" viewBox="0 0 612.08 612.08"
-                 >
+            >
                 <g>
                     <path d="M237.927,0C106.555,0,0.035,106.52,0.035,237.893c0,131.373,106.52,237.893,237.893,237.893
                         c50.518,0,97.368-15.757,135.879-42.597l0.028-0.028l176.432,176.433c3.274,3.274,8.48,3.358,11.839,0l47.551-47.551
@@ -20,17 +42,18 @@ const Search = () => {
                 </g>
             </svg>
             <input
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
+                ref={inputRef}
+                value={value}
+                onChange={onChangeInput}
                 className={styles.input}
                 placeholder="Поиск пиццы..."
             />
-            {searchValue && (
-                <svg onClick={() => setSearchValue('')}
+            {value && (
+                <svg onClick={() => onClickClear()}
                      className={styles.clearIcon} xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    viewBox="0 0 24 24">
-                <path
-                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                     viewBox="0 0 24 24">
+                    <path
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                 </svg>
             )}
         </div>
