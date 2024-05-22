@@ -2,6 +2,10 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import { setSortType } from '../redux/slices/filterSlice'
 
+export const list = [
+    {name: 'популярности', sortProperty: 'rating'},
+    {name: 'цене', sortProperty: 'price'},
+    {name: 'алфавиту', sortProperty: 'title'}]
 
 function Sort({ onChangeOrder}) {
     const dispatch = useDispatch()
@@ -11,10 +15,6 @@ function Sort({ onChangeOrder}) {
         dispatch(setSortType(obj));
         setOpen(false)
     }
-    const list = [
-        {name: 'популярности', sortProperty: 'rating'},
-        {name: 'цене', sortProperty: 'price'},
-        {name: 'алфавиту', sortProperty: 'title'}]
 
     return (
         <div className="sort">
