@@ -20,7 +20,6 @@ function Sort({ onChangeOrder}) {
     React.useEffect(() => {
         const handleClickOutside = event => {
             if (!event.composedPath().includes(sortRef.current)) {
-                console.log("clicked sortRef");
                 setOpen(false);
             }
         }
