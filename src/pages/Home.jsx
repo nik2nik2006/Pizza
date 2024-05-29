@@ -8,9 +8,9 @@ import Sort, {list} from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../Pagination";
-import { SearchContext } from "../App";
-import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice'
-import { fetchPizzas } from "../redux/slices/pizzaSlice";
+import {selectFilter, setCategoryId, setCurrentPage, setFilters} from '../redux/slices/filterSlice'
+import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
+
 import styles from "../components/NotFoundBlock/NotFoundBlock.module.scss";
 
 
@@ -20,11 +20,11 @@ const Home = () => {
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
 
-    const {categoryId, sort, currentPage} = useSelector(state => state.filter)
-    const { items, status } = useSelector(state => state.pizza)
+    const {categoryId, sort, currentPage, searchValue } = useSelector(selectFilter)
+    const { items, status } = useSelector(selectPizzaData)
 
-    const {searchValue} = React.useContext(SearchContext)
     const [orderBy, setOrderBy] = React.useState('asc');
+
     const onChangeCategory = (id) => {
         dispatch(setCategoryId(id))
     }
