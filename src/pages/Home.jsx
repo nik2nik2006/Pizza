@@ -1,7 +1,7 @@
 import React from "react";
 import qs from "qs"
 import {useDispatch, useSelector} from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 import Categories from "../components/Categories";
 import Sort, {list} from "../components/Sort";
@@ -86,7 +86,11 @@ const Home = () => {
         isSearch.current = false;
     }, [categoryId, sort, orderBy, searchValue, currentPage]);
 
-    const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+    const pizzas = items.map((obj) => (
+        <Link key={obj.id} to={`/pizza/${obj.id}`}>
+            <PizzaBlock {...obj} />
+        </Link>
+    ));
     const skeletons = [...new Array(9)].map((_, index) => <Skeleton key={index}/>);
 
     return (
