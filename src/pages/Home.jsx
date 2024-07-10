@@ -25,9 +25,13 @@ const Home = () => {
 
     const [orderBy, setOrderBy] = React.useState('asc');
 
-    const onChangeCategory = (id) => {
+    const onChangeCategory = React.useCallback((id) => {
         dispatch(setCategoryId(id))
-    }
+    }, []);
+
+    const onChangeOrder = React.useCallback((i) => {
+        (setOrderBy(i))
+    }, []);
     const onChangePage = (number) => {
         dispatch(setCurrentPage(number));
     }
@@ -88,7 +92,7 @@ const Home = () => {
 
     const pizzas = items.map((obj) => (
         // <Link key={obj.id} to={`/pizza/${obj.id}`}>
-            <PizzaBlock {...obj} />
+            <PizzaBlock key={obj.id}{...obj} />
         // </Link>
     ));
     const skeletons = [...new Array(9)].map((_, index) => <Skeleton key={index}/>);
@@ -98,7 +102,7 @@ const Home = () => {
             <div className="content__top">
                 <Categories value={categoryId}
                             onChangeCategory={ onChangeCategory } />
-                <Sort onChangeOrder={(i) => (setOrderBy(i))} />
+                <Sort onChangeOrder={onChangeOrder} value={sort}/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             {
