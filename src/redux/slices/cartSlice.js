@@ -1,10 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
+import {getCartFromLS} from "../../utils/getCartFromLS";
+import {calcTotalPrice} from "../../utils/calcTotalPrice";
+
+const { items, totalPrice } = getCartFromLS()
 
 export const cartSlice = createSlice({
+
     name: 'cart',
     initialState: {
-        totalPrice: 0,
-        items: [],
+        totalPrice,
+        items,
 
     },
     reducers: {
@@ -12,23 +17,22 @@ export const cartSlice = createSlice({
             const findItem = state.items.find((obj) => obj.id === action.payload.id)
             if (findItem) {
                 findItem.count++;
-                state.totalPrice += findItem.price;
             } else {
                 state.items.push({
                     ...action.payload,
                     count: 1,
                 });
-                state.totalPrice += action.payload.price;
             }
+            state.totalPrice = calcTotalPrice(state.items);
         },
         removeItem(state, action) {
             const findItem = state.items.find((obj) => obj.id === action.payload.id)
             findItem.count-= 1;
-            state.totalPrice -= findItem.price;
+            state.totalPrice = calcTotalPrice(state.items);
         },
         clearItem(state, action) {
             state.items = state.items.filter((obj) => obj.id !== action.payload.id);
-            state.totalPrice = state.items.reduce((sum, item) => sum + item.count * item.price, 0);
+            state.totalPrice = calcTotalPrice(state.items);
         },
         clearAllItem(state) {
             state.items = [];

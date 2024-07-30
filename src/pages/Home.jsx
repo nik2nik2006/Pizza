@@ -8,10 +8,10 @@ import Sort, {list} from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../Pagination";
+
 import {selectFilter, setCategoryId, setCurrentPage, setFilters} from '../redux/slices/filterSlice'
 import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
 
-import styles from "../components/NotFoundBlock/NotFoundBlock.module.scss";
 
 
 const Home = () => {
